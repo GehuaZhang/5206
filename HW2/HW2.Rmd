@@ -1,0 +1,150 @@
+---
+title: "GR_5205 HW_2"
+author: "Gehua Zhang (UNI:gz2280)"
+date: "9/22/2018"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+***
+
+#### 2.1.a
+
+This conclusion is not warranted.
+$$
+H_0: \beta_1 = 0 \\
+H_1: \beta_1 \neq 0
+$$
+
+
+For both intercept and slope lay inside confidence interval:
+$$
+\beta_0^* = 7.43119 \in [-1.18518, 16.0476] \\
+\beta_1^* = 0.755048 \in [0.452886, 1.05721]
+$$
+Which implies we concluded null hypothesis that there is no linear relationship between sales and population.
+
+Level of significance: $\alpha = 5 \%$
+
+
+
+#### 2.1.b
+
+This interval could be negative, due to the possibilities that our $t$ value could be large:
+In this case, degree of freedom = 48, with 95% confidence interval, 
+
+```{r}
+qt(0.975,48)
+```
+t(0.975;48) = 2.010635
+
+For the confidence interval,
+
+$$
+b_1 \pm t(1-\alpha/2;n-2)*s(b_1)
+$$
+If we have a relative large t value and small $b_1$, it is possible to obtain a negative limit.
+
+From a real life perspective to interpret this negative boundary, we just choose a strict level of significance thus our model over-protects us from the majority of circumstances (where sales$>0$), and even some impossible situations (sales$<0$). The model derives from a mathematical view to ensure that our interval is safety enough so it is not weird to have negative values.
+
+
+***
+
+#### 2.2
+
+If we concluded $H_0:\beta_1 \leq 0$, which implies there is a non-postive relation of $X$ and $Y$, but we are not sure if $\beta_1 = 0$. We should have a further test that $H_0:\beta_1=0$ and $H_1: \beta_1 \neq 0$ to make sure if there is a linear association between $X$ and $Y$.
+
+
+***
+
+#### 2.3
+Since it is a test of slope, we assume the hypothesis should be:
+
+$$
+H_0:\beta_1 = 0
+\\
+H_1:\beta_2 \neq  0
+$$
+And we obtain a p-value $= 0.91$.
+
+From the definition of p-value, it is the smallest $\alpha$ which rejects our null hypothesis. So here the smallest $\alpha = 0.91$, which implies that we only have 19% confidence interval to reject null hypothesis, that is, we have a weak evidence to reject null hypothesis, thus we conclude null hypothesis. In this case, we conclude that there may be no association of $X$ and $Y$, the student is wrong.
+
+
+***
+
+#### 2.4.a
+
+```{r}
+data<-read.table("/Users/gehuazhang/Desktop/Data\ Sets/Chapter\ \ 1\ Data\ Sets/CH01PR19.txt")
+colnames(data)<-c("GPA","ACT")
+fit<-lm(data$GPA~data$ACT)
+fit
+```
+
+```{r}
+slopeTwoSideCI <- function(xList, yList, alpha){
+  fit <- lm(yList~xList)
+  b1 <- summary(fit)$coefficients[2,1]
+  s_b1 <- summary(fit)$coefficients[2,2]
+  n <- length(xList)
+  t_value <- qt(1-alpha/2,length(yList)-2)
+  t_star <- b1/s_b1
+  interval <- c(b1-t_value*s_b1, b1+t_value*s_b1)
+  names(interval)<-c("confidence interval","confidence interval")
+  return(c(t_star,interval))
+}
+
+slopeTwoSideCI(data$ACT,data$GPA,0.01)[2:3]
+```
+
+The confidence of $\beta_1$ does not include zero. Admission director is interested about zero because this telling he/she that students' GPA may not correspond to their ACT scores.
+
+#### 2.4.b
+Hypothesis:
+$$
+H_0:\beta_1 = 0
+\\
+H_1:\beta_1 \neq 0
+$$
+```{r}
+t_star <- slopeTwoSideCI(data$ACT,data$GPA,0.01)[1]
+names(t_star)<-"t*"
+t_star
+t_value <- qt(1-0.01/2,length(data$GPA)-2)
+names(t_value)<-"t_value"
+t_value
+```
+
+
+$$
+b_1 = 0.03883
+\\
+\\
+t^* = \frac{b_1}{s(b_1)} = 3.039777
+\\
+t(1-\alpha/2;n-2) = 2.618137
+$$
+Since $|t^*| > t(1-\alpha/2;n-2)$, we should reject our null hypothesis and conclude that there is association for students' ACT and GPA.
+
+#### 2.4.c
+
+```{r}
+p_value <- 2*pt(3.039777, length(data$GPA)-2, lower=FALSE)
+p_value
+```
+Since p-value $< \alpha$, which is 0.002916602, we reject $H_0$.
+
+
+
+
+
+
+
+
+
+
+
+
+
+

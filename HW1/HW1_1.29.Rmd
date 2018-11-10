@@ -1,0 +1,16 @@
+---
+title: "HW1_1.29"
+author: "Gehua Zhang (UNI:gz2280)"
+date: "2018-09-16"
+output: html_document
+---
+
+##1.29
+
+When we force $\beta_{0}=0$, which means the interception would be $0$, thus our model always goes through the origin and only the slop $\beta_{1}$ determines our model. The plot must go through the origin.
+
+##1.30
+
+When we force $\beta_{1}=0$, our model is only determined by the interception $\beta_{0}$, whatever the slope is. The plot is a line which is parallel to $x$-axis and the interception of $y$-axis is $\beta_{0}$.
+
+

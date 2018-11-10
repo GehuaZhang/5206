@@ -1,0 +1,423 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={5205\_hw6},
+            pdfauthor={Gehua Zhang (gz2280)},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{5205\_hw6}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{Gehua Zhang (gz2280)}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+      \predate{\centering\large\emph}
+  \postdate{\par}
+    \date{2018-11-05}
+
+
+\begin{document}
+\maketitle
+
+\hypertarget{a}{%
+\paragraph{6.5.a}\label{a}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{CH06FI05 <-}\StringTok{ }\KeywordTok{read.table}\NormalTok{(}\StringTok{"C:/Users/Think/Desktop/Columbia/Class/2018 Fall/LinReg/Datasets/Data Sets/Chapter  6 Data Sets/CH06PR05.txt"}\NormalTok{)}
+\NormalTok{df <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{Y=}\NormalTok{CH06FI05}\OperatorTok{$}\NormalTok{V1,}\DataTypeTok{X1=}\NormalTok{CH06FI05}\OperatorTok{$}\NormalTok{V2,}\DataTypeTok{X2=}\NormalTok{CH06FI05}\OperatorTok{$}\NormalTok{V3)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{pairs}\NormalTok{(df[,}\DecValTok{2}\OperatorTok{:}\DecValTok{3}\NormalTok{])}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{hw6_gz2280_files/figure-latex/unnamed-chunk-2-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{round}\NormalTok{(}\KeywordTok{cor}\NormalTok{(df),}\DecValTok{4}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##         Y     X1     X2
+## Y  1.0000 0.8924 0.3946
+## X1 0.8924 1.0000 0.0000
+## X2 0.3946 0.0000 1.0000
+\end{verbatim}
+
+From correlation matrix, we can see a strong relation of \(Y\) and
+\(X_1\), \(X_1\) and \(X_2\) have no co-relation.
+
+\hypertarget{b}{%
+\paragraph{6.5.b}\label{b}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fit1<-}\KeywordTok{lm}\NormalTok{(Y}\OperatorTok{~}\NormalTok{X1}\OperatorTok{+}\NormalTok{X2, }\DataTypeTok{data=}\NormalTok{df)}
+\NormalTok{fit1}\OperatorTok{$}\NormalTok{coef}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## (Intercept)          X1          X2 
+##      37.650       4.425       4.375
+\end{verbatim}
+
+Here the regression function is
+\[Y_i=\beta_0+\beta_1 X_{i1} +\beta_2 X_{i2} + \epsilon_i\]
+\[\hat Y=37.650+4.425 \hat X_{i1} +4.375 \hat X_{i2}\]
+
+\(b_1\) is the regression coefficient of \(X_1\).
+
+\hypertarget{c}{%
+\paragraph{6.5.c}\label{c}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{resi<-fit1}\OperatorTok{$}\NormalTok{residuals}
+\NormalTok{resi}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##     1     2     3     4     5     6     7     8     9    10    11    12 
+## -0.10  0.15 -3.10  3.15 -0.95 -1.70 -1.95  1.30  1.20 -1.55  4.20  2.45 
+##    13    14    15    16 
+## -2.65 -4.40  3.35  0.60
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{boxplot}\NormalTok{(resi, }\DataTypeTok{main=}\StringTok{"Residuals Box Plot"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{hw6_gz2280_files/figure-latex/unnamed-chunk-4-1.pdf}
+
+The residuals are normally distributed with mean zero and equally
+distributed on both sides.
+
+\hypertarget{d}{%
+\paragraph{6.5.d}\label{d}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(}\KeywordTok{predict}\NormalTok{(fit1),resi,}\DataTypeTok{xlab=}\StringTok{"Y Predict"}\NormalTok{,}\DataTypeTok{ylab=}\StringTok{"Residuals"}\NormalTok{,}\DataTypeTok{main=}\StringTok{"Residuals vs Predicted Y"}\NormalTok{,}\DataTypeTok{pch=}\DecValTok{19}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{hw6_gz2280_files/figure-latex/unnamed-chunk-5-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(df}\OperatorTok{$}\NormalTok{X1,resi,}\DataTypeTok{xlab=}\StringTok{"X1"}\NormalTok{,}\DataTypeTok{ylab=}\StringTok{"Residuals"}\NormalTok{,}\DataTypeTok{main=}\StringTok{"Residuals vs X1"}\NormalTok{,}\DataTypeTok{pch=}\DecValTok{19}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{hw6_gz2280_files/figure-latex/unnamed-chunk-5-2.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(df}\OperatorTok{$}\NormalTok{X2,resi,}\DataTypeTok{xlab=}\StringTok{"X2"}\NormalTok{,}\DataTypeTok{ylab=}\StringTok{"Residuals"}\NormalTok{,}\DataTypeTok{main=}\StringTok{"Residuals vs X2"}\NormalTok{,}\DataTypeTok{pch=}\DecValTok{19}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{hw6_gz2280_files/figure-latex/unnamed-chunk-5-3.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(df}\OperatorTok{$}\NormalTok{X2}\OperatorTok{*}\NormalTok{df}\OperatorTok{$}\NormalTok{X1,resi,}\DataTypeTok{xlab=}\StringTok{"X1X2"}\NormalTok{,}\DataTypeTok{ylab=}\StringTok{"Residuals"}\NormalTok{,}\DataTypeTok{main=}\StringTok{"Residuals vs X1X2"}\NormalTok{,}\DataTypeTok{pch=}\DecValTok{19}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{hw6_gz2280_files/figure-latex/unnamed-chunk-5-4.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{qqnorm}\NormalTok{(resi)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{hw6_gz2280_files/figure-latex/unnamed-chunk-5-5.pdf}
+
+The residuals seem to be independent of \(Y,X_1,X_2,X_1X_2\), normal
+probability plot verifies that conclusion.
+
+\hypertarget{a-1}{%
+\paragraph{6.6.a}\label{a-1}}
+
+\[H_0: \beta_1=\beta_2=0\] \[H_0: \beta_1\ne 0 \text{ or } \beta_2\ne0\]
+
+Apply F-test
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{summary}\NormalTok{(fit1)}\OperatorTok{$}\NormalTok{fstatistic}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    value    numdf    dendf 
+## 129.0832   2.0000  13.0000
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{qf}\NormalTok{(}\FloatTok{0.99}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{13}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 6.700965
+\end{verbatim}
+
+Hence our F-value \(129.0832 > 6.7\), we conclude \(H_a\) that there is
+a linear relation of our data, implies that \(\beta_1\) and \(\beta_2\)
+cannot all be zero.
+
+\hypertarget{b-1}{%
+\paragraph{6.6.b}\label{b-1}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{summary}\NormalTok{(fit1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = Y ~ X1 + X2, data = df)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -4.400 -1.762  0.025  1.587  4.200 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)  37.6500     2.9961  12.566 1.20e-08 ***
+## X1            4.4250     0.3011  14.695 1.78e-09 ***
+## X2            4.3750     0.6733   6.498 2.01e-05 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 2.693 on 13 degrees of freedom
+## Multiple R-squared:  0.9521, Adjusted R-squared:  0.9447 
+## F-statistic: 129.1 on 2 and 13 DF,  p-value: 2.658e-09
+\end{verbatim}
+
+p-value is 2.658e-09.
+
+\hypertarget{c-1}{%
+\paragraph{6.6.c}\label{c-1}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FloatTok{4.4250}\OperatorTok{+}\KeywordTok{c}\NormalTok{(}\OperatorTok{-}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{)}\OperatorTok{*}\FloatTok{0.3011}\OperatorTok{*}\KeywordTok{qt}\NormalTok{(}\DecValTok{1}\FloatTok{-0.01}\OperatorTok{/}\DecValTok{4}\NormalTok{,}\DecValTok{13}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 3.40955 5.44045
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FloatTok{4.3750}\OperatorTok{+}\KeywordTok{c}\NormalTok{(}\OperatorTok{-}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{)}\OperatorTok{*}\FloatTok{0.6733}\OperatorTok{*}\KeywordTok{qt}\NormalTok{(}\DecValTok{1}\FloatTok{-0.01}\OperatorTok{/}\DecValTok{4}\NormalTok{,}\DecValTok{13}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 2.104317 6.645683
+\end{verbatim}
+
+Therefore confidence interval for \(\beta_1\):{[}3.40955,5.44045{]}, for
+\(\beta_2\):{[}2.104317,6.645683{]}.
+
+\hypertarget{a-2}{%
+\paragraph{6.7.a}\label{a-2}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{summary}\NormalTok{(fit1)}\OperatorTok{$}\NormalTok{r.square}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.952059
+\end{verbatim}
+
+This fitting is pretty good.
+
+\hypertarget{b-2}{%
+\paragraph{6.7.b}\label{b-2}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pred_y<-}\KeywordTok{predict}\NormalTok{(fit1)}
+\NormalTok{SSTO<-}\KeywordTok{sum}\NormalTok{((df}\OperatorTok{$}\NormalTok{Y}\OperatorTok{-}\KeywordTok{mean}\NormalTok{(df}\OperatorTok{$}\NormalTok{Y))}\OperatorTok{^}\DecValTok{2}\NormalTok{)}
+\NormalTok{SSE<-}\KeywordTok{sum}\NormalTok{((pred_y}\OperatorTok{-}\NormalTok{df}\OperatorTok{$}\NormalTok{Y)}\OperatorTok{^}\DecValTok{2}\NormalTok{)}
+\DecValTok{1}\OperatorTok{-}\NormalTok{SSE}\OperatorTok{/}\NormalTok{SSTO}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.952059
+\end{verbatim}
+
+Yes, them are the same.
+
+\hypertarget{a-3}{%
+\paragraph{6.8.a}\label{a-3}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{b_martix<-}\KeywordTok{matrix}\NormalTok{(fit1}\OperatorTok{$}\NormalTok{coefficients)}
+\NormalTok{x_matrix<-}\KeywordTok{matrix}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{rep}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{16}\NormalTok{),df}\OperatorTok{$}\NormalTok{X1,df}\OperatorTok{$}\NormalTok{X2),}\DataTypeTok{nrow =} \DecValTok{16}\NormalTok{, }\DataTypeTok{ncol =} \DecValTok{3}\NormalTok{, }\DataTypeTok{byrow =} \OtherTok{FALSE}\NormalTok{)}
+\NormalTok{s_square_b<-SSE}\OperatorTok{/}\NormalTok{(}\DecValTok{13}\NormalTok{)}\OperatorTok{*}\KeywordTok{solve}\NormalTok{(}\KeywordTok{t}\NormalTok{(x_matrix)}\OperatorTok{%*%}\NormalTok{x_matrix)}
+\NormalTok{x_h <-}\KeywordTok{matrix}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{5}\NormalTok{,}\DecValTok{4}\NormalTok{),}\DataTypeTok{nrow=}\DecValTok{3}\NormalTok{,}\DataTypeTok{byrow=}\OtherTok{TRUE}\NormalTok{)}
+\NormalTok{s_yh<-}\KeywordTok{sqrt}\NormalTok{(}\KeywordTok{t}\NormalTok{(x_h) }\OperatorTok{%*%}\StringTok{ }\NormalTok{s_square_b}\OperatorTok{%*%}\NormalTok{x_h)}
+\NormalTok{yh<-}\KeywordTok{t}\NormalTok{(x_h)}\OperatorTok{%*%}\NormalTok{b_martix}
+
+\KeywordTok{c}\NormalTok{(yh)}\OperatorTok{+}\KeywordTok{c}\NormalTok{(}\OperatorTok{-}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{)}\OperatorTok{*}\KeywordTok{c}\NormalTok{(s_yh)}\OperatorTok{*}\KeywordTok{qt}\NormalTok{(}\DecValTok{1}\FloatTok{-0.01}\OperatorTok{/}\DecValTok{2}\NormalTok{,}\DecValTok{13}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 73.88111 80.66889
+\end{verbatim}
+
+Hence our interval for \(\hat Y_h\) is {[}73.88111, 80.66889{]}
+
+\hypertarget{b-3}{%
+\paragraph{6.8.b}\label{b-3}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{s_pred <-}\StringTok{ }\KeywordTok{sqrt}\NormalTok{(SSE}\OperatorTok{/}\DecValTok{13}\OperatorTok{+}\NormalTok{s_yh}\OperatorTok{^}\DecValTok{2}\NormalTok{)}
+\KeywordTok{c}\NormalTok{(yh)}\OperatorTok{+}\KeywordTok{c}\NormalTok{(}\OperatorTok{-}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{)}\OperatorTok{*}\KeywordTok{c}\NormalTok{(s_pred)}\OperatorTok{*}\KeywordTok{qt}\NormalTok{(}\DecValTok{1}\FloatTok{-0.01}\OperatorTok{/}\DecValTok{2}\NormalTok{,}\DecValTok{13}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 68.48077 86.06923
+\end{verbatim}
+
+The confidence interval for new observation is {[}68.48077,86.06923{]}.
+
+
+\end{document}

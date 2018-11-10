@@ -1,0 +1,174 @@
+---
+title: "5205HW4"
+author: "Gehua Zhang (UNI:gz2280)"
+date: "10/7/2018"
+output: html_document
+---
+
+#### 3.3.a
+```{r}
+data<-read.table("/Users/gehuazhang/Desktop/Data\ Sets/Chapter\ \ 3\ Data\ Sets/CH03PR03.txt")
+colnames(data)<-c("GPA","ACT","IQ","RANK")
+fit<-lm(data$GPA~data$ACT)
+```
+
+```{r}
+boxplot(data$ACT)
+```
+
+
+
+From the box plot we can see the range of students' ACT score, as well as their median, 1st and 3rd quartiles.
+
+Also this graph seems pretty symmetric with no outliers. Looks like randomly sampled from a normal distribution.
+
+
+
+#### 3.3.c
+```{r}
+resids <- resid(fit)
+plot(predict(fit),fit$resi, main="Residuals vs Fitted Values", xlab="Fitted values", ylab="Residuals")
+abline(0,0, col="red")
+```
+
+
+This plot indicates that, the distribution of $e_{i}$ seems no relation to the fitted values $\hat Y_i$, which correspondes our model $Y_i = \beta_1X_i+\beta_0+e_i$ that $e_i$ and $Y_i$ are independent. Also we can conclude that $E(e_i)=0$.
+
+#### 3.3.d
+
+```{r}
+qqnorm(fit$resi)
+qqline(fit$resi)
+```
+
+```{r}
+library(Hmisc)
+sorted_e <- sort(fit$resi)
+
+expectedResidual <- function(list_residual){
+  list_residual <- sort(list_residual)
+  n<-length(list_residual)
+  MSE <- sum(list_residual^2)/(n-2)
+  list_exp_residual=c()
+  
+  for (index_residual in c(1:n)){
+    z_value<-qnorm((index_residual-0.375)/(n+0.25))
+    list_exp_residual<-c(list_exp_residual,sqrt(MSE)*z_value)
+  }
+  return(list_exp_residual)
+}
+
+exp_e <- expectedResidual(fit$resi)
+cor(qqnorm(fit$resi)$x,qqnorm(fit$resi)$y)
+```
+
+Since from Table B.6 we have critical value = 0.987, our coefficient correlation is 0.9477 < 0.987, we conclude that it is not a good normality.
+
+#### 3.3.e
+```{r}
+e1 <- fit$resi[data$ACT<26]
+e2 <- fit$resi[data$ACT>=26]
+n1 <- length(e1)
+n2 <- length(e2)
+median_e1 <- median(e1)
+median_e2 <- median(e2)
+d1 <- abs(e1-median_e1)
+d2 <- abs(e2-median_e2)
+s2 <- (sum((d1-mean(d1))^2) + sum((d2-mean(d2))^2))/(n1+n2-2)
+t_star <- (mean(d1)-mean(d2))/(sqrt(s2)*sqrt(1/n1+1/n2))
+
+abs(t_star)
+qt(1-0.01/2,118)
+```
+
+
+Since our $|t^*_{BF}| \le 2.618$, we should conclude that error variance is constant.
+
+This conclusion just matches our findings in part (c).
+
+```{r}
+plot(data$IQ,fit$resi,main="Residuals vs Intelligence Test", xlab = "Intelligence Test", ylab = "Residuals")
+abline(0,0,col="red")
+```
+
+
+
+```{r}
+plot(data$RANK,fit$resi,main="Residuals vs High School Class Rank", xlab = "High School Class Rank", ylab = "Residuals")
+abline(0,0,col="red")
+```
+
+From graphs we conclude that there might exist some relation between residuals and intelligence test, but no many of associations between residuals and high school class ranks. So I would add intelligence test as part of the regression model.
+
+
+
+
+***
+
+
+#### 3.16.a
+
+```{r}
+concen_data<-read.table("/Users/gehuazhang/Desktop/Data\ Sets/Chapter\ \ 3\ Data\ Sets/CH03PR15.txt")
+colnames(concen_data)<-c("concen","time")
+concen_fit <- lm(concen_data$concen~concen_data$time)
+plot(concen_data$time,concen_data$concen, main="Concentration vs Hours", xlab="Hours", ylab="Concentration of Solution")
+```
+
+I would try take the log value of $Y$ to standardize the variance of $Y$ and obtain a linearity.
+
+
+#### 3.16.c
+
+```{r}
+y <- log10(concen_data$concen)
+log_fit<-lm(y~concen_data$time)
+summary(log_fit)
+```
+
+#### 3.16.d
+
+```{r}
+plot(concen_data$time,y,main="Log Concentration vs Hours", xlab="Hours", ylab="Log Concentration of Solution")
+abline(log_fit$coefficients, col="red")
+```
+
+This seems to be a very good fit.
+
+#### 3.16.e
+
+```{r}
+plot(log_fit$resi, predict(log_fit), main="Residuals vs Fitted Value", xlab="Fitted Value", ylab="Residuals")
+abline(0,0, col= "red")
+```
+
+It looks like that our residuals are randomly distributed around $y=0$ line, however, over half of the residuals are below zero. It could be caused by the limited size of data, a further inspection is needed.
+
+
+```{r}
+qqnorm(log_fit$resi)
+qqline(log_fit$resi)
+```
+
+The Q-Q plot indicates that residuals are closely distributed around a linear line, which states that our residuals are randomly distributed.
+
+
+
+#### 3.16.f
+
+Our origin model should be 
+$$
+Y = 10^{-0.195400*X+0.654880}
+$$
+
+```{r}
+origin_fit <- function(x){
+  return(10^(log_fit$coefficients[2]*x+log_fit$coefficients[1]))
+}
+  
+  
+plot(concen_data$time,concen_data$concen,main="Concentration vs Hours", xlab="Hours", ylab="Concentration of Solution")
+curve(10^(log_fit$coefficients[2]*x+log_fit$coefficients[1]),0,9, col="red",add=TRUE)
+
+```
+

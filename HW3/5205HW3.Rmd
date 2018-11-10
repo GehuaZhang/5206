@@ -1,0 +1,192 @@
+---
+title: "GR_5205 HW_3"
+author: "Gehua Zhang (UNI:gz2280)"
+date: "9/28/2018"
+output: html_document
+---
+
+
+***
+
+#### 2.12
+
+From the equation (2.37) we know that, 
+
+$$
+\sigma^2\{pred \} = \sigma^2 + \sigma^2\{\hat Y_h\}
+$$
+Where $\sigma^2$ is the variance of observed new data and $\sigma^2\{\hat Y_h\}$ is the variance of predicted data.
+
+If we increasing the sample size $n$, the variance of predicted data may decrease however the variance of new data may not be affected, since their distribution is not determined by previous sample size. **Thus our variance of predict error would not approach to zero.**
+
+However, if we take a look at $\sigma^2\{\hat Y_h\}$, we notice that,
+$$
+\sigma^2\{\hat Y_h\} = \sigma^2[\frac{1}{n}+\frac{(X_h-\bar X)^2}{\Sigma (X_i - \bar X)^2}]
+$$
+As we increasing $n$, $\frac{(X_h-\bar X)^2}{\Sigma (X_i - \bar X)^2}$ would decreasing as the we summing more and more $(X_i-\bar X)^2$. Also $\frac{1}{n}$ would decreasing. Other parts of RHS would not be affected so we would observe a decreasing in $\sigma^2\{\hat Y_h\}$. **So our variance of predicted data would approach zero.**
+
+
+#### 2.13.a
+
+From previous work we have:
+```{r}
+data<-read.table("/Users/gehuazhang/Desktop/Data\ Sets/Chapter\ \ 1\ Data\ Sets/CH01PR19.txt")
+colnames(data)<-c("GPA","ACT")
+
+fit<-lm(GPA~ACT, data=data)
+n<-length(data$GPA)
+summary(fit)
+```
+
+```{r}
+meanConfidence<-function(fit, Xh, alpha){
+  n <- length(data$ACT)
+  Yh = fit$coefficients[1]+fit$coefficients[2]*Xh
+  MSE <- mean(fit$residuals^2)*n/(n-2)
+  sigma_X <- sum((data$ACT - mean(data$ACT))^2)
+  sigma_Xh <- (Xh-mean(data$ACT))^2
+  sigma_Yh <- (1/n+sigma_Xh/sigma_X)*MSE
+  CI = Yh+c(-1,1)*qt(1-alpha/2,n-2)*sqrt(sigma_Yh)
+  return(CI)
+}
+
+meanConfidence(fit, 28,0.05)
+```
+
+So the problem here is to calculate the confidence intervel for $E(Y_h)$, this is not a predict problem.
+
+
+#### 2.13.b
+
+This is a predict problem with parameters unknow, since all of our parameters are point estimators.
+
+The general formula:
+
+$$
+\sigma^2\{pred \} = \sigma^2 + \sigma^2\{\hat Y_h\}
+\\
+\hat Y_h \pm t(1-\frac{\alpha}{2},n-2)*s\{pred \}
+$$
+```{r}
+predictConfidence <- function(fit, Xh, alpha){
+  n <- length(data$ACT)
+  Yh = fit$coefficients[1]+fit$coefficients[2]*Xh
+  sigma_X <- sum((data$ACT - mean(data$ACT))^2)
+  sigma_Xh <- (Xh-mean(data$ACT))^2
+  MSE <- mean(fit$residuals^2)*n/(n-2)
+  sigma_pred <- MSE*(1+1/n+sigma_Xh/sigma_X)
+  CI <- Yh + c(-1,1)*qt(1-alpha/2,n-2)*sqrt(sigma_pred)
+  return(CI)
+}
+predictConfidence(fit, 28,0.05)
+```
+For unknown parameter predictions, we need to substitue $\sigma^2 (\hat Y_h)$ with $\sigma^2 (pred)$, which cotains not only new response's variance but also the whole estimation's variance.
+
+#### 2.13.c
+
+Yes, the CI in part (b) is wider than CI in part (a), because it contains the variance from the whole dataset. This is reasonable since our model contains estimation of parameters $\beta_0,\beta_1$, and using them to predict new values should also contain the variance from the whole dataset which generates those parameters.
+
+#### 2.13.d
+
+For confidence band of regression line, we have the formula:
+$$
+\hat Y_h  \pm W s(\hat Y_h)
+\\
+W ^2 = 2 F(1-\alpha, n-2) 
+$$
+Then we apply formula here:
+```{r}
+LineConfidence<-function(fit, Xh, alpha){
+  n <- length(data$ACT)
+  Yh <- fit$coefficients[1]+fit$coefficients[2]*Xh
+  W <- sqrt(2*qf(1-alpha,2,n-2))
+  MSE <- mean(fit$residuals^2)*n/(n-2)
+  sigma_X <- sum((data$ACT - mean(data$ACT))^2)
+  sigma_Xh <- (Xh-mean(data$ACT))^2
+  sigma_Yh <- (1/n+sigma_Xh/sigma_X)*MSE
+  CI <- Yh+c(-1,1)*W*sqrt(sigma_Yh)
+  return(CI)
+}
+
+LineConfidence(fit, 28, 0.05)
+```
+
+This interval is indeed slightly wider than the confidence interval for $X_h=28$ since it represents the confidence interval for entire regression model.
+
+#### 2.23.a
+
+```{r}
+anova(fit)
+```
+
+#### 2.23.b
+
+$$
+MSR = \frac{SSR}{1}
+\\
+MSE = \frac{SSE}{n-2}
+$$
+
+MSR is regression mean square, calculated by sum of squares divided by degrees of freedom (in simple linear regression it should be 1).
+
+MSE is error mean square, calculated by sum of errors divided by associated degrees of freedom (n-2).
+
+When $\beta_1=0$ we have $MSR = MSE$
+
+#### 2.23.c
+$$
+H_0:\beta_1 = 0
+\\
+H_1:\beta_1 \neq  0
+\\
+F^* = \frac{MSR}{MSE}
+$$
+
+```{r}
+n <- length(data$ACT)
+qf((1-0.01),1,n-2)
+anova(fit)$F[1]
+
+```
+Since our $F<F^*$, we conclude alternative hypothesis that $H_1:\beta_1 \neq  0$.
+
+
+#### 2.23.d
+
+Absolute maginitude of reduction:
+
+$$
+SSR = 3.588
+$$
+Relative reduction:
+$$
+R^2 = \frac{SSR}{SSR+SSE} = 0.072623
+$$
+This is called $R^2$-value.
+
+#### 2.23.e
+
+$$
+r = \sqrt {R^2} = \sqrt{0.072623} = 0.26945
+$$
+Here we have $r>0$ because there is a positive relatio between $X$ and $Y$.
+
+#### 2.23.f
+
+I think $R^2$ is more clear-cut, because it reflects the percentage of variance of $Y$ that can be explained by $X$.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

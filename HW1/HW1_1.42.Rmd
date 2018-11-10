@@ -1,0 +1,65 @@
+---
+title: "HW1_1.42"
+author: "Gehua Zhang (UNI:gz2280)"
+date: '2018-09-16'
+output:
+  pdf_document: default
+  html_document: default
+---
+
+## 1.42
+####a.
+
+$$
+\frac{1}{(32\pi)^{3}}exp(-\frac{1}{32}\Sigma_{i=1}^{n}(Y_{i}-\beta{1}X_{i})^2)
+$$
+
+
+####b.
+First we define the likelihood funtion
+
+```{r}
+likelihood = function(xList, yList, sigma, beta1) {
+  value = 1
+  for (i in 1:length(xList))
+  {
+    value = value * 1/(sqrt(2*pi)*sigma) * exp(-1/2*(yList[i]-beta1*xList[i])^2/(sigma^2))
+  }
+  return(value)
+}
+```
+Then we calculate coresponding $\beta_{1}=17,18,19$
+```{r}
+xList <- c(7,12,4,14,25,30)
+yList <- c(128,213,75,250,446,540)
+
+likelihood(xList, yList, 4, 17)
+likelihood(xList, yList, 4, 18)
+likelihood(xList, yList, 4, 19)
+```
+
+####c.
+We define Maximum Likelihood function based on the formula it provides:
+```{r}
+maxLikelihood <- function(xList,yList){
+  value = sum(xList*yList)/sum(xList^2)
+  return(value)
+}
+maxLikelihood(xList,yList)
+```
+It is consistent with our result in part b, which we obtain maximum likelihood around $\beta_{1}=18$
+
+####d.
+We make a list of $\beta_{1}$ from 17 to 19 by increment 0.01
+```{r}
+beta1 <- seq(17, 19, by=0.01)
+likeList = likelihood(xList,yList,4,beta1)
+plot(beta1,likeList)
+```
+
+
+The plot clearly shows that a point slightly aleft 18.0 which obtains the maximum likelihood function.
+
+
+
+

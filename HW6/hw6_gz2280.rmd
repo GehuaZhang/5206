@@ -1,0 +1,153 @@
+---
+title: "5205_hw6"
+author: "Gehua Zhang (gz2280)"
+date: '2018-11-05'
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+---
+
+#### 6.5.a
+
+```{r}
+CH06FI05 <- read.table("C:/Users/Think/Desktop/Columbia/Class/2018 Fall/LinReg/Datasets/Data Sets/Chapter  6 Data Sets/CH06PR05.txt")
+df <- data.frame(Y=CH06FI05$V1,X1=CH06FI05$V2,X2=CH06FI05$V3)
+```
+
+
+```{r}
+pairs(df[,2:3])
+round(cor(df),4)
+```
+
+From correlation matrix, we can see a strong relation of $Y$ and $X_1$, $X_1$ and $X_2$ have no co-relation.
+
+#### 6.5.b
+
+```{r}
+fit1<-lm(Y~X1+X2, data=df)
+fit1$coef
+```
+
+Here the regression function is 
+$$Y_i=\beta_0+\beta_1 X_{i1} +\beta_2 X_{i2} + \epsilon_i$$
+$$\hat Y=37.650+4.425 \hat X_{i1} +4.375 \hat X_{i2}$$
+
+$b_1$ is the regression coefficient of $X_1$.
+
+
+#### 6.5.c
+
+```{r}
+resi<-fit1$residuals
+resi
+boxplot(resi, main="Residuals Box Plot")
+```
+
+The residuals are normally distributed with mean zero and equally distributed on both sides.
+
+
+#### 6.5.d
+
+```{r}
+plot(predict(fit1),resi,xlab="Y Predict",ylab="Residuals",main="Residuals vs Predicted Y",pch=19)
+plot(df$X1,resi,xlab="X1",ylab="Residuals",main="Residuals vs X1",pch=19)
+plot(df$X2,resi,xlab="X2",ylab="Residuals",main="Residuals vs X2",pch=19)
+plot(df$X2*df$X1,resi,xlab="X1X2",ylab="Residuals",main="Residuals vs X1X2",pch=19)
+qqnorm(resi)
+
+```
+
+The residuals seem to be independent of $Y,X_1,X_2,X_1X_2$, normal probability plot verifies that conclusion.
+
+
+
+#### 6.6.a
+
+$$H_0: \beta_1=\beta_2=0$$
+$$H_0: \beta_1\ne 0 \text{ or } \beta_2\ne0$$
+
+Apply F-test
+
+```{r}
+summary(fit1)$fstatistic
+qf(0.99,2,13)
+```
+
+Hence our F-value $129.0832 > 6.7$, we conclude $H_a$ that there is a linear relation of our data, implies that $\beta_1$ and $\beta_2$ cannot all be zero.
+
+
+#### 6.6.b
+
+```{r}
+summary(fit1)
+```
+
+p-value is 2.658e-09.
+
+
+#### 6.6.c
+
+```{r}
+4.4250+c(-1,1)*0.3011*qt(1-0.01/4,13)
+4.3750+c(-1,1)*0.6733*qt(1-0.01/4,13)
+
+```
+
+Therefore confidence interval for $\beta_1$:[3.40955,5.44045], for $\beta_2$:[2.104317,6.645683].
+
+
+#### 6.7.a
+
+```{r}
+summary(fit1)$r.square
+```
+
+This fitting is pretty good.
+
+
+#### 6.7.b
+
+```{r}
+pred_y<-predict(fit1)
+SSTO<-sum((df$Y-mean(df$Y))^2)
+SSE<-sum((pred_y-df$Y)^2)
+1-SSE/SSTO
+
+```
+
+Yes, them are the same.
+
+
+#### 6.8.a
+
+```{r}
+b_martix<-matrix(fit1$coefficients)
+x_matrix<-matrix(c(rep(1, 16),df$X1,df$X2),nrow = 16, ncol = 3, byrow = FALSE)
+s_square_b<-SSE/(13)*solve(t(x_matrix)%*%x_matrix)
+x_h <-matrix(c(1,5,4),nrow=3,byrow=TRUE)
+s_yh<-sqrt(t(x_h) %*% s_square_b%*%x_h)
+yh<-t(x_h)%*%b_martix
+
+c(yh)+c(-1,1)*c(s_yh)*qt(1-0.01/2,13)
+```
+
+Hence our interval for $\hat Y_h$ is [73.88111, 80.66889]
+
+
+#### 6.8.b
+
+```{r}
+s_pred <- sqrt(SSE/13+s_yh^2)
+c(yh)+c(-1,1)*c(s_pred)*qt(1-0.01/2,13)
+```
+
+The confidence interval for new observation is [68.48077,86.06923].
+
+
+
+
+
+
+

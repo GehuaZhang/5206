@@ -1,0 +1,146 @@
+---
+title: "5205HW5"
+author: "Gehua Zhang (UNI:gz2280)"
+date: "10/14/2018"
+output: html_document
+---
+
+#### 3.15.a
+
+```{r}
+data<-read.table("/Users/gehuazhang/Desktop/Data\ Sets/Chapter\ \ 3\ Data\ Sets/CH03PR15.txt")
+
+colnames(data)<-c("concen","time")
+concen_fit <- lm(data$concen~data$time)
+summary(concen_fit)
+```
+
+#### 3.15.b
+
+Set our null hypothesis and alternative: 
+
+$$H_0: E(Y) = \beta_0+\beta_1*X $$
+
+$$H_a: E(Y) \neq \beta_0+\beta_1*X$$
+
+```{r}
+full=lm(data$concen~factor(data$time)-1)
+anova(concen_fit, full)
+qf(1-0.025,3,10)
+```
+Since our $F^* > F$ statistics, we conclude $H_a$ that this is not a good fit.
+
+#### 3.15.c
+
+SSLF:
+
+```{r}
+
+calculateSSLF <- function (x,y){
+  df<-data.frame(y=y,x=x)
+  y_mean<-aggregate(y, list(df$x), mean)
+  y_mean<-rep(unlist(y_mean[2]),each=3)
+  y_mean<-sort(y_mean,FALSE)
+  linearModel <- lm(y~x)
+  y_hat <- predict(linearModel)
+  sslf <- sum((y_hat-y_mean)^2)
+  return(sslf)
+}
+print("SSLF")
+calculateSSLF(data$time,data$concen)
+anova(concen_fit)
+```
+
+From this calculation we can tell that SSLF consists a large part of SSE, which implies that this model lacks of fit, since SSLF measures the distance of fitted values and mean values, if our model fits well, SSLF should be small.
+
+
+
+#### 3.16.b
+
+```{r}
+library(ALSM)
+bc <- boxcox.sse(data$time,data$concen,l= c(-0.2,-0.1,0,0.1,0.2))
+bc
+```
+
+From this graph and table we see when $\lambda = 0$ we obtain the minimum SSE, which suggests us to apply log function to $Y$.
+
+
+#### 3.23
+
+Since our model has no intercept $\beta_0$, our reduced model should be $Y_{ij}=\beta_1X_j+\epsilon_{ij}$
+
+Our full model should be $Y_{ij}=\mu_j+\epsilon_{ij}$
+
+$df_F = n-c=20-10=10$, $df_R=n-1=20-1=19$
+
+#### 4.14.a
+
+```{r}
+data2<-read.table("/Users/gehuazhang/Desktop/Data\ Sets/Chapter\ \ 1\ Data\ Sets/CH01PR19.txt")
+colnames(data2)<-c("GPA","ACT")
+origin_fit<-lm(GPA~0+ACT,data=data2)
+origin_fit
+```
+
+Origin fit: $Y_i=0.1216X_i$
+
+#### 4.14.b
+
+```{r}
+confint(origin_fit,"ACT",level=0.95)
+```
+
+With 95% of probability that our estimated $\beta_1$ would be in range 0.1164216 and 0.1268643.
+
+
+#### 4.14.c
+
+```{r}
+ACT<-data2$ACT
+predict.lm(origin_fit,newdata=data.frame(ACT=30),interval="confidence",level=0.95)
+```
+The confidence interval for ACT=30 students' GPA is 3.492647 and 3.805928.
+
+#### 4.15.a
+```{r}
+plot(data2$ACT,data2$GPA, xlab="ACT", ylab="GPA")
+abline(origin_fit,col="red")
+```
+
+This looks like a not bad fit, but the original data does not seem to have a linear relation.
+
+#### 4.15.b
+
+```{r}
+resi<-origin_fit$resi
+resi[1:10]
+sum(resi)
+```
+
+Residuals are not summing to zero. 
+
+```{r}
+plot(predict(origin_fit),resi,xlab="Y_hat",ylab="Residuals",main="Residuals vs Fitted Values")
+abline(0,0,col="red")
+```
+The residuals of our model seems have a decreasing tendency over fitting values. They could be dependent, we need a further analysis about the dependencies of residuals and fitted values.
+
+#### 4.15.c
+
+```{r}
+full2=lm(GPA~0+factor(ACT), data=data2)
+summary(full2)$df
+anova(origin_fit, full2)
+qf(1-0.005,20,99)
+```
+Our null hypothesis and alternative: 
+
+$$H_0: E(Y) = \beta_1*X $$
+
+$$H_a: E(Y) \neq \beta_1*X$$
+
+Since $F^*>F$ we reject null hypothesis and conclude that this is not a good fit. The p-value in our test is 0.0002159, which is smaller than our test $\alpha=0.005$. 
+
+
+

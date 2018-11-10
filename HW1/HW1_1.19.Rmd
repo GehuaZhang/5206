@@ -1,0 +1,76 @@
+---
+title: "HW1"
+author: "Gehua Zhang (UNI:gz2280)"
+
+date: "2018-09-16"
+output: html_document
+---
+
+##1.19
+
+####a.
+```{r}
+data <- read.table("C:\\Users\\Think\\Desktop\\Columbia\\Class\\2018 Fall\\LinReg\\Datasets\\Data Sets\\Chapter  1 Data Sets\\CH01PR19.txt", header=FALSE)
+colnames(data) <- c("GPA","ACT")
+
+fit <- lm(data$GPA ~ data$ACT)
+fit
+```
+
+The Least Squares Estimate are $\beta_{0} = 2.11405, \beta_{1} = 0.03883$ 
+
+Estimated Regression Function:
+$$
+Y =  0.03883X+2.11405
+$$
+
+####b. 
+```{r}
+
+plot(data,col="blue")
+abline(lm(data$ACT~data$GPA),col=2,lwd=3)
+
+```
+
+It appears not fitting well.
+
+####c.
+```{r}
+mean(data$GPA[data$ACT==30])
+```
+
+####d.
+
+```{r}
+avgGPA_list <- tapply(data$GPA,data$ACT,mean)
+avgGPA_list
+
+```
+To calculate the point estimator for mean response change while the ACT score increases by one point, we can use the following approach:
+
+
+$$
+i^{th}\ GPA\ Change = GPA_{i+1}-GPA_{i}
+$$
+
+Mean of $i^{th}\ GPA \ Change$:
+
+$$
+\frac{\Sigma \ (GPA_{i+1}-GPA_{i})}{Number \ of \ i}
+$$
+
+Thus we have:
+
+```{r}
+MeanResponseChange = (tail(avgGPA_list,n=1)-avgGPA_list[1])/length(avgGPA_list)
+MeanResponseChange
+
+```
+
+
+
+
+
+
+
+
