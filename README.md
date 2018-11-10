@@ -1,3 +1,6 @@
-# 5206
+# GR5205 Linear Regression Models
 
-Test
+This repo is for class GR5205 Linear Regression Models. 
+
+Mainly R codes.
+
